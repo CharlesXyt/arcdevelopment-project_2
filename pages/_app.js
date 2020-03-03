@@ -5,7 +5,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/ui/theme';
 import Header from '../src/ui/Header'
-import Footer from '../src/ui/Header'
+import Footer from '../src/ui/Footer'
 
 export default class MyApp extends App {
   componentDidMount() {

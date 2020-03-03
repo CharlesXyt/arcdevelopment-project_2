@@ -27,7 +27,7 @@ export default function Footer(props) {
     <footer className={classes.footer}>
       <img
         alt="black decorative slash"
-        src="public/assets/footerAdornment.svg"
+        src="/assets/footerAdornment.svg"
         className={classes.adornment}
       />
     </footer>
