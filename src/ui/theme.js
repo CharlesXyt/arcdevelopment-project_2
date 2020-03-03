@@ -104,6 +104,15 @@ export default createMuiTheme({
           borderBottom: `2px solid ${arcBlue}`
         }
       }
+    },
+    MuiFormControlLabel:{
+      label:{
+        color:arcBlue,
+        fontWeight:700
+      },
+      labelPlacementStart:{
+        marginLeft:0
+      }
     }
   }
 });
