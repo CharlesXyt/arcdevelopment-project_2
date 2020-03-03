@@ -3,7 +3,9 @@ import App from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../src/theme';
+import theme from '../src/ui/theme';
+import Header from '../src/ui/Header'
+import Footer from '../src/ui/Header'
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -26,7 +28,9 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
+          <Header />
           <Component {...pageProps} />
+          <Footer />
         </ThemeProvider>
       </React.Fragment>
     );
