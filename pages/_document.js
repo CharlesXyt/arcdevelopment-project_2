@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico|Raleway:100,400,400i,700|Roboto:300,400,500,700&display=swap" />
         </Head>
-        <body>
+        <body style={{backgroundColor:"#fff"}}>
           <Main />
           <NextScript />
         </body>
