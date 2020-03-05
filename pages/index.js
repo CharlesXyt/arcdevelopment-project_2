@@ -54,8 +54,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function createData(name, date, service, features, complexity, platform, users, total) {
-  return { name, date, service, features, complexity, platform, users, total }
+function createData(name, date, service, features, complexity, platform, users, total,search) {
+  return { name, date, service, features, complexity, platform, users, total,search }
 }
 
 export default function ProjectManager() {
@@ -63,9 +63,9 @@ export default function ProjectManager() {
   const classes = useStyles()
   const theme = useTheme()
   const [rows, setRows] = useState([
-    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500"),
-    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500"),
-    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500")
+    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
+    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
+    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true)
   ])
 
   const platformOptions = ["Web", "iOS", "Android"]
@@ -86,6 +86,8 @@ export default function ProjectManager() {
   const [platforms, setPlatforms] = useState([])
   const [features, setFeatures] = useState([])
 
+  const [search,setSearch] = useState("")
+
 
   const addProject = () => {
 
@@ -94,7 +96,7 @@ export default function ProjectManager() {
     service === "Website" ? "N/A":complexity,
     service === "Website" ? "N/A":platforms.join(", "),
     service === "Website" ? "N/A":users,
-    `$${total}`)])
+    `$${total}`,true)])
     setDialogOpen(false)
     setWebsiteChecked(false)
     setIOSChecked(false)
@@ -125,6 +127,20 @@ export default function ProjectManager() {
     return false
   } 
 
+  const handleSearch = (event) =>{
+    setSearch(event.target.value)
+    const rowData = rows.map(row => Object.values(row).filter(option => option !==true && option !== false))
+
+    const matches = rowData.map(row => row.map(option => option.toLowerCase().includes(event.target.value.toLowerCase())))
+
+    const newRows = [...rows]
+    matches.map((row,index) => row.includes(true) ? newRows[index].search = true : newRows[index].search = false)
+
+    setRows(newRows)
+  }
+
+
+
   return (
     <MuiPickersUtilsProvider utils={DataFnsUtils}>
       <Grid container direction="column">
@@ -133,6 +149,8 @@ export default function ProjectManager() {
         </Grid>
         <Grid item>
           <TextField
+            value={search}
+            onChange={handleSearch}
             style={{ width: "35em", marginLeft: "5em" }}
             InputProps={{
               endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => setDialogOpen(true)}><Add color="primary" style={{ fontSize: 30 }} /></InputAdornment>
@@ -196,7 +214,7 @@ export default function ProjectManager() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
+                {rows.filter(row => row.search).map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">{row.name}</TableCell>
                     <TableCell align="center">{row.date}</TableCell>
