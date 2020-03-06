@@ -130,9 +130,24 @@ export default createMuiTheme({
     },
     MuiSvgIcon:{
       root:{
+        
         "&.MuiSelect-icon":{
           fill:arcOrange
         }
+      },
+      
+    },
+    MuiTableSortLabel:{
+      root:{
+        "&:hover":{
+          color:arcOrange
+        },
+        "&.MuiTableSortLabel-active":{
+          color:arcOrange
+        }
+      },
+      icon :{
+        fill:arcOrange
       }
     }
   }

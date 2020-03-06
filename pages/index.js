@@ -8,13 +8,6 @@ import {
   Switch,
   FormGroup,
   FormControlLabel,
-  Table,
-  TableBody,
-  TableHead,
-  TableContainer,
-  TableRow,
-  TableCell,
-  Paper,
   DialogContent,
   Dialog,
   Radio,
@@ -30,10 +23,10 @@ import {
 import DataFnsUtils from '@date-io/date-fns'
 import {format} from 'date-fns'
 import {
-  Add,
-  FilterList
+  Add
 } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
+import EnhancedTable from '../src/ui/EnhancedTable'
 
 const useStyles = makeStyles(theme => ({
   service: {
@@ -64,8 +57,11 @@ export default function ProjectManager() {
   const theme = useTheme()
   const [rows, setRows] = useState([
     createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
-    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
-    createData("alex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true)
+    createData("blex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
+    createData("clex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
+    createData("dlex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
+    createData("elex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true),
+    createData("flex", "11/2/19", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500",true)
   ])
 
   const platformOptions = ["Web", "iOS", "Android"]
@@ -87,6 +83,8 @@ export default function ProjectManager() {
   const [features, setFeatures] = useState([])
 
   const [search,setSearch] = useState("")
+
+  const [page, setPage] = React.useState(0);
 
 
   const addProject = () => {
@@ -137,6 +135,7 @@ export default function ProjectManager() {
     matches.map((row,index) => row.includes(true) ? newRows[index].search = true : newRows[index].search = false)
 
     setRows(newRows)
+    setPage(0)
   }
 
 
@@ -193,42 +192,9 @@ export default function ProjectManager() {
             />
           </FormGroup>
         </Grid>
-        <Grid item container justify="flex-end" style={{ marginTop: "5em" }}>
-          <Grid item style={{ marginRight: 75 }}>
-            <FilterList color="secondary" style={{ fontSize: 50 }} />
-          </Grid>
-        </Grid>
-        <Grid item style={{ marginBottom: "15em" }}>
-          <TableContainer component={Paper} elevation={0}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Service</TableCell>
-                  <TableCell align="center">Feature</TableCell>
-                  <TableCell align="center">Complexity</TableCell>
-                  <TableCell align="center">Platform</TableCell>
-                  <TableCell align="center">User</TableCell>
-                  <TableCell align="center">Total</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.filter(row => row.search).map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.name}</TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.service}</TableCell>
-                    <TableCell align="center" style={{ maxWidth: "5em" }}>{row.features}</TableCell>
-                    <TableCell align="center">{row.complexity}</TableCell>
-                    <TableCell align="center">{row.platform}</TableCell>
-                    <TableCell align="center">{row.users}</TableCell>
-                    <TableCell align="center">{row.total}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        
+        <Grid item style={{ marginTop:"5em",marginBottom: "35em" }}>
+          <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage}/>
         </Grid>
         <Dialog open={dialogOpen} fullWidth maxWidth="md" onClose={() => setDialogOpen(false)}>
           <Grid container justify="center">
