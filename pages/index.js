@@ -194,7 +194,7 @@ export default function ProjectManager() {
         </Grid>
         
         <Grid item style={{ marginTop:"5em",marginBottom: "35em" }}>
-          <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage}/>
+          <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage} websiteChecked={websiteChecked} iOSChecked={iOSChecked} androidChecked={androidChecked} softwareChecked={softwareChecked}/>
         </Grid>
         <Dialog open={dialogOpen} fullWidth maxWidth="md" onClose={() => setDialogOpen(false)}>
           <Grid container justify="center">

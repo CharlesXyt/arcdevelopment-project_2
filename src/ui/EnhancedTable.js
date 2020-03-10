@@ -18,8 +18,11 @@ import {
     IconButton,
     Tooltip,
     Snackbar,
-    Button
-
+    Button,
+    Menu,
+    MenuItem,
+    TextField,
+    InputAdornment
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -67,6 +70,8 @@ function EnhancedTableHead(props) {
     const createSortHandler = property => event => {
         onRequestSort(event, property);
     };
+
+
 
     return (
         <TableHead>
@@ -133,6 +138,14 @@ const useToolbarStyles = makeStyles(theme => ({
     title: {
         flex: '1 1 100%',
     },
+    menu:{
+        "&:hover":{
+            backgroundColor:"#fff"
+        },
+        "&.Mui-focusVisible":{
+            backgroundColor:"#fff"
+        }
+    }
 }));
 
 const EnhancedTableToolbar = props => {
@@ -140,6 +153,9 @@ const EnhancedTableToolbar = props => {
     const { numSelected, selected, setSelected, rows, setRows } = props;
     const [undo, setUndo] = React.useState([])
     const [alert, setAlert] = React.useState({ open: false, color: "#ff3232", message: "Row deleted!" })
+    const [anchorEl,setAnchorEl] = React.useState(null)
+    const [totalFilter,setTotalFilter] = React.useState(">")
+    const [openMenu,setOpenMenu] = React.useState(false)
 
     const onDelete = () => {
         const newRows = [...rows]
@@ -159,6 +175,17 @@ const EnhancedTableToolbar = props => {
         redo.map(row => row.search = true)
         Array.prototype.push.apply(newRows, ...redo)
         setRows(newRows)
+    }
+
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget)
+        setOpenMenu(true)
+    }
+
+    const handleClose = (event) => {
+        setAnchorEl(null)
+        setOpenMenu(false)
     }
 
     return (
@@ -182,7 +209,7 @@ const EnhancedTableToolbar = props => {
                 </Tooltip>
             ) : (
                     <Tooltip title="Filter list">
-                        <IconButton aria-label="filter list">
+                        <IconButton aria-label="filter list" onClick={handleClick}>
                             <FilterListIcon style={{ fontSize: 50 }} color="secondary" />
                         </IconButton>
                     </Tooltip>
@@ -207,6 +234,31 @@ const EnhancedTableToolbar = props => {
                 }}
                 action={<Button onClick={onUndo} style={{ color: "#fff" }}>undo</Button>}
             />
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={openMenu}
+                onClose={handleClose}
+                
+                elevation={0}
+                keepMounted
+                //  for search engine
+                style={{zIndex:1302}}
+                // menu item above the app bar
+            >
+                <MenuItem classes={{
+                    root:classes.menu
+                }}>
+                <TextField 
+                InputProps={{
+                    type:"number",
+                    endAdornment:(
+                    <InputAdornment onClick={() => setTotalFilter(totalFilter === ">" ? "<" :totalFilter === "<" ? "=" : "<")} position="end" style={{pointer:"click"}}>
+                        <span className={classes.totalFilter}>{totalFilter}</span>
+                    </InputAdornment>
+                    )}}/>
+                </MenuItem>    
+            </Menu>
         </Toolbar>
     );
 };
@@ -246,7 +298,7 @@ export default function EnhancedTable(props) {
     const [selected, setSelected] = React.useState([]);
 
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const { rows, setRows, page, setPage } = props
+    const { rows, setRows, page, setPage, websiteChecked, iOSChecked, androidChecked, softwareChecked } = props
 
 
 
@@ -299,6 +351,29 @@ export default function EnhancedTable(props) {
 
     const isSelected = name => selected.indexOf(name) !== -1;
 
+    const switchFilters = () => {
+        const websites = props.rows.filter(row => websiteChecked ? row.service === "Website" : null)
+        const iOSApps = props.rows.filter(row => iOSChecked ? row.platform.includes("iOS") : null)
+        const androidApps = props.rows.filter(row => androidChecked ? row.platform.includes("Android") : null)
+        const softwareApps = props.rows.filter(row => softwareChecked ? row.service === "Custom Software" : null)
+
+
+
+        if (!websiteChecked && !iOSChecked && !androidChecked && !softwareChecked) {
+            return rows
+        } else {
+            let newRows = websites.concat(iOSApps.filter(item => websites.indexOf(item) < 0))
+
+            let newRows2 = newRows.concat(androidApps.filter(item => newRows.indexOf(item) < 0))
+
+            let newRows3 = newRows2.concat(softwareApps.filter(item => newRows2.indexOf(item) < 0))
+
+
+            return newRows3
+        }
+    }
+
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={0}>
@@ -320,7 +395,7 @@ export default function EnhancedTable(props) {
                             rowCount={rows.length}
                         />
                         <TableBody>
-                            {stableSort(rows.filter(row => row.search), getComparator(order, orderBy))
+                            {stableSort(switchFilters().filter(row => row.search), getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.name);
